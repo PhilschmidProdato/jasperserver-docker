@@ -66,11 +66,11 @@ services:
     image: postgres:10
     env_file: .env
 
-    # volumes:
-    #   - ./postgres-10-data:/var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
 volumes:
-  postgres-10-data:
+  pgdata:
   #jrs_license:
   #jrs_customization:
 
