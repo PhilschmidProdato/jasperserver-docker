@@ -71,6 +71,7 @@ services:
 
 volumes:
   pgdata:
+  WEB-INF:
   #jrs_license:
   #jrs_customization:
 

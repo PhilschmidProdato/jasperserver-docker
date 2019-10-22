@@ -24,9 +24,9 @@ COPY resources/TIB_js-jrs_*_bin.zip /tmp/jasperserver.zip
 
 RUN echo "apt-get" && echo "nameserver 8.8.8.8" | tee /etc/resolv.conf > /dev/null && \
     apt-get update > /dev/null && apt-get install -y --no-install-recommends apt-utils  > /dev/null && \
-	apt-get install -y postgresql-client unzip xmlstarlet  > /dev/null && \
+    apt-get install -y postgresql-client unzip xmlstarlet  > /dev/null && \
     rm -rf /var/lib/apt/lists/* && \
-	rm -rf $CATALINA_HOME/webapps/ROOT && \
+    rm -rf $CATALINA_HOME/webapps/ROOT && \
     rm -rf $CATALINA_HOME/webapps/docs && \
     rm -rf $CATALINA_HOME/webapps/examples && \
     rm -rf $CATALINA_HOME/webapps/host-manager && \
@@ -36,15 +36,15 @@ RUN echo "apt-get" && echo "nameserver 8.8.8.8" | tee /etc/resolv.conf > /dev/nu
     rm -rf /tmp/* && \
     mv /usr/src/jasperreports-server/jasperreports-server-*/* /usr/src/jasperreports-server && \
     echo "unzip JasperReports Server WAR to Tomcat" && \
-	unzip -o -q /usr/src/jasperreports-server/jasperserver-pro.war \
-		-d $CATALINA_HOME/webapps/jasperserver-pro > /dev/null && \
-	rm -f /usr/src/jasperreports-server/jasperserver-pro.war && \
-	# java shouldn't be there - just to make sure
-	rm -rf /usr/src/jasperreports-server/java && \
-	chmod +x /usr/src/jasperreports-server/buildomatic/js-* && \
-	chmod +x /usr/src/jasperreports-server/buildomatic/bin/*.sh && \
-	chmod +x /usr/src/jasperreports-server/apache-ant/bin/* && \
-	echo "Check JAVA environment" && \
+    unzip -o -q /usr/src/jasperreports-server/jasperserver-pro.war \
+    -d $CATALINA_HOME/webapps/jasperserver-pro > /dev/null && \
+    rm -f /usr/src/jasperreports-server/jasperserver-pro.war && \
+    # java shouldn't be there - just to make sure
+    rm -rf /usr/src/jasperreports-server/java && \
+    chmod +x /usr/src/jasperreports-server/buildomatic/js-* && \
+    chmod +x /usr/src/jasperreports-server/buildomatic/bin/*.sh && \
+    chmod +x /usr/src/jasperreports-server/apache-ant/bin/* && \
+    echo "Check JAVA environment" && \
     env | grep JAVA && \
     java -version
 
@@ -54,7 +54,7 @@ ENV PHANTOMJS_VERSION 2.1.1
 # Extract phantomjs, move to /usr/local/share/phantomjs, link to /usr/local/bin.
 # Comment out if phantomjs not required.
 RUN echo "nameserver 8.8.8.8" | tee /etc/resolv.conf > /dev/null && \
-     wget "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2" \
+    wget "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2" \
     -O /tmp/phantomjs.tar.bz2 --no-verbose && \
     tar -xjf /tmp/phantomjs.tar.bz2 -C /tmp && \
     rm -f /tmp/phantomjs.tar.bz2 && \
@@ -74,7 +74,7 @@ RUN echo "nameserver 8.8.8.8" | tee /etc/resolv.conf > /dev/null && \
 ENV POSTGRES_JDBC_DRIVER_VERSION 42.2.5
 
 RUN echo "nameserver 8.8.8.8" | tee /etc/resolv.conf > /dev/null && \
-     wget "https://jdbc.postgresql.org/download/postgresql-${POSTGRES_JDBC_DRIVER_VERSION}.jar"  \
+    wget "https://jdbc.postgresql.org/download/postgresql-${POSTGRES_JDBC_DRIVER_VERSION}.jar"  \
     -P /usr/src/jasperreports-server/buildomatic/conf_source/db/postgresql/jdbc --no-verbose
 
 # Configure tomcat for SSL by default with a self-signed certificate.
@@ -86,16 +86,16 @@ ENV DN_HOSTNAME=${DN_HOSTNAME:-localhost.localdomain} \
     HTTPS_PORT=${HTTPS_PORT:-8443}
 
 RUN keytool -genkey -alias self_signed -dname "CN=${DN_HOSTNAME}" \
-		-storetype PKCS12 \
-        -storepass "${KS_PASSWORD}" \
-        -keypass "${KS_PASSWORD}" \
-        -keystore /root/.keystore.p12 && \
-	keytool -list -keystore /root/.keystore.p12 -storepass "${KS_PASSWORD}" -storetype PKCS12 && \
+    -storetype PKCS12 \
+    -storepass "${KS_PASSWORD}" \
+    -keypass "${KS_PASSWORD}" \
+    -keystore /root/.keystore.p12 && \
+    keytool -list -keystore /root/.keystore.p12 -storepass "${KS_PASSWORD}" -storetype PKCS12 && \
     xmlstarlet ed --inplace --subnode "/Server/Service" --type elem \ 
-        -n Connector -v "" --var connector-ssl '$prev' \
+    -n Connector -v "" --var connector-ssl '$prev' \
     --insert '$connector-ssl' --type attr -n port -v "${HTTPS_PORT:-8443}" \
     --insert '$connector-ssl' --type attr -n protocol -v \ 
-        "org.apache.coyote.http11.Http11NioProtocol" \
+    "org.apache.coyote.http11.Http11NioProtocol" \
     --insert '$connector-ssl' --type attr -n maxThreads -v "150" \
     --insert '$connector-ssl' --type attr -n SSLEnabled -v "true" \
     --insert '$connector-ssl' --type attr -n scheme -v "https" \
@@ -103,9 +103,9 @@ RUN keytool -genkey -alias self_signed -dname "CN=${DN_HOSTNAME}" \
     --insert '$connector-ssl' --type attr -n clientAuth -v "false" \
     --insert '$connector-ssl' --type attr -n sslProtocol -v "TLS" \
     --insert '$connector-ssl' --type attr -n keystorePass \
-        -v "${KS_PASSWORD}"\
+    -v "${KS_PASSWORD}"\
     --insert '$connector-ssl' --type attr -n keystoreFile \
-        -v "/root/.keystore.p12" \
+    -v "/root/.keystore.p12" \
     ${CATALINA_HOME}/conf/server.xml 
 
 # Expose ports. Note that you must do one of the following:
@@ -114,6 +114,9 @@ RUN keytool -genkey -alias self_signed -dname "CN=${DN_HOSTNAME}" \
 EXPOSE 8080 ${HTTPS_PORT:-8443}
 
 COPY scripts/entrypoint.sh /
+
+COPY WEB-INF/ /usr/local/tomcat/webapps/jasperserver-pro/WEB-INF/   
+
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

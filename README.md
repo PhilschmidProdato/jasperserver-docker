@@ -8,6 +8,10 @@ docker-compose up -d
 
 runs js-server under localhost:8080
 
+## Copy WEB-INF for WebService
+
+    docker cp WEB-INF df38d16617aa:/usr/local/tomcat/webapps/jasperserver-pro/WEB-INF
+
 # TIBCO - Read me followed
 
 
